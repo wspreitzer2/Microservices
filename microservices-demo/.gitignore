@@ -1,6 +1,7 @@
 HELP.md
 target/
 twitter-to-kafka-service/logs
+twitter-to-kafka-service/resources
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
