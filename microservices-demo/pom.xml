@@ -21,7 +21,8 @@
 		<java.version>17</java.version>
 		<spring-boot.version>3.3.4</spring-boot.version>
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-		<twitter.version>4.1.1</twitter.version>
+		<twitter.core.version>4.1.1</twitter.core.version>
+		<twitter.stream.version>4.0.7</twitter.stream.version>
 		<lombok.version>1.18.34</lombok.version>
 	</properties>
 	<dependencyManagement>
@@ -34,7 +35,12 @@
 			<dependency>
 				<groupId>org.twitter4j</groupId>
 				<artifactId>twitter4j-core</artifactId>
-				<version>${twitter.version}</version>
+				<version>${twitter.stream.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.twitter4j</groupId>
+				<artifactId>twitter4j-stream</artifactId>
+				<version>${twitter.stream.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.projectlombok</groupId>
