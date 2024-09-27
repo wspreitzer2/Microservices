@@ -5,5 +5,4 @@ twitter-to-kafka-service:
     - Spring
     - Kafka
     - Elasticsearch
-  welcome-message:
-    Welcome to the Twitter to Kafka Service
+  welcome-message: Welcome to the Twitter to Kafka Service
