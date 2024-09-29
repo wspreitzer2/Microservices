@@ -31,7 +31,6 @@
 		<lombok.version>1.18.34</lombok.version>
 		<httpclient.version>4.5.13</httpclient.version>
 		<json.version>20231013</json.version>
-		<app-config-data.version>0.0.1-SNAPSHOT</app-config-data.version>
 		<avro.version>1.11.3</avro.version>
 		<spring-kafka.version>2.6.2</spring-kafka.version>
 		<spring-retry.version>2.0.9</spring-retry.version>
@@ -41,12 +40,21 @@
 			<dependency>
 				<groupId>com.microservices.demo</groupId>
 				<artifactId>app-config-data</artifactId>
-				<version>${app-config-data.version}</version>
+				<version>${project.version}</version>
+			</dependency><dependency>
+				<groupId>com.microservices.demo</groupId>
+				<artifactId>common-config</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter</artifactId>
+				<version>${spring-boot.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-webflux</artifactId>
 				<version>${spring-boot.version}</version>
 			</dependency>
 			<dependency>
