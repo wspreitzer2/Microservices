@@ -1,8 +1,11 @@
 HELP.md
 target/
-twitter-to-kafka-service/logs
 twitter-to-kafka-service/src/main/resources
-app-config-data/src/main/resources
+docker-compose
+*.properties
+*.avsc
+*.yml
+*.log
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
