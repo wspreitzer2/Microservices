@@ -3,18 +3,26 @@ package com.microservices.demo.kafka.admin.client;
 import com.microservices.demo.config.KafkaConfigData;
 import com.microservices.demo.config.RetryConfigData;
 import com.microservices.demo.kafka.admin.exception.KafkaClientException;
+import org.apache.kafka.clients.ClientResponse;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.CreateTopicsResult;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.admin.TopicListing;
+import org.apache.kafka.common.quota.ClientQuotaAlteration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.retry.RetryContext;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
+
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -25,12 +33,14 @@ public class KafkaAdminClient {
     private final RetryConfigData retryConfigData;
     private final AdminClient adminClient;
     private final RetryTemplate retryTemplate;
+    private final WebClient webClient;
 
-    public KafkaAdminClient(KafkaConfigData kafkaConfigData, RetryConfigData retryConfigData, AdminClient adminClient, RetryTemplate retryTemplate) {
+    public KafkaAdminClient(KafkaConfigData kafkaConfigData, RetryConfigData retryConfigData, AdminClient adminClient, RetryTemplate retryTemplate, WebClient webClient) {
         this.kafkaConfigData = kafkaConfigData;
         this.retryConfigData = retryConfigData;
         this.adminClient = adminClient;
         this.retryTemplate = retryTemplate;
+        this.webClient = webClient;
     }
 
     public void createTopics() {
@@ -75,10 +85,22 @@ public class KafkaAdminClient {
         Integer maxRetry = retryConfigData.getMaxAttempts();
         int multiplier = retryConfigData.getMultiplier().intValue();
         Long sleepTimeMs = retryConfigData.getSleepTimeMs();
-        while (true) {
+        while (!getSchemaRegistryStatus().get().is2xxSuccessful()) {
             checkMaxRetry(retryCount++, maxRetry);
             sleep(sleepTimeMs);
             sleepTimeMs *= multiplier;
+        }
+    }
+
+    private Optional<HttpStatusCode> getSchemaRegistryStatus() {
+        try {
+            WebClient.ResponseSpec response = webClient
+                    .get()
+                    .uri(kafkaConfigData.getSchemaRegistryUrl())
+                    .retrieve();
+            return Optional.of(response.toBodilessEntity().blockOptional().get().getStatusCode());
+        } catch (Exception e) {
+            return Optional.of(HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 
